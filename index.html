@@ -7,22 +7,28 @@
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
     <title>Eatch a Sketch</title>
+    <link rel="icon" href="/img/color-circle.ico">
 </head>
 <body>
-    <div class="title">Etch A Sketch</div>
-    <div class="topButtons">
-        <button id="clearButton">Clear</button>
-        <button id="eraseButton">Erase</button>
-        <button id="blackButton">Black</button>
-        <button id="randomButton">Random</button>
-        <input type="color" id="colorPicker" value="#333333"></input>
-    </div>   
-    <div class="grid-container"></div>
-    <div class="botButtons">
-        <div id="sliderValue"></div>
-        <div class="sliderContainer">
-            <input type="range" min="2" max="100" value='24'class="slider" id="myRange">
+    <div class="container">
+        <div class="title">
+            <a href="https://github.com/0crw" target="_blank"><h1>Eatch a Sketch</h1></a>
         </div>
-    </div> 
+        <div class="topBtn">
+            <button id="clear">Clear</button>
+            <button id="erase">Erase</button>
+            <button id="black">Black</button>
+            <button id="random">Random</button>
+            <!-- <button id="previous">Previous</button> -->
+            <!-- <input type="color" id="colorPicker"></input> -->
+        </div>
+        <div class="mainGrid"></div>
+        <div class="bottomBtn">
+            <div id="sliderValue"></div>
+            <div class="sliderRangeContainer">
+                <input type="range" min="4" max="64" value="16" class="slider" id="myRange">
+            </div>
+        </div>
+    </div>
 </body>
 </html>

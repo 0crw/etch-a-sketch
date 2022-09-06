@@ -1,107 +1,115 @@
-const grid = document.querySelector(".grid-container");
-const slider = document.getElementById("myRange");
-const clearButton = document.getElementById("clearButton");
-const eraseButton = document.getElementById("eraseButton");
-const randomButton = document.getElementById("randomButton")
-let colorPicker = document.getElementById("colorPicker");
-let output = document.getElementById('sliderValue');
-let randomColor = `hsl(${Math.random() * 360}, 90%, 70%)` 
-let currentColor = colorPicker.value;
-let numOfSquares = slider.value;
-let colorPicked = colorPicker.value
+const grid = document.querySelector('.mainGrid');
+const slider = document.getElementById('myRange');
+const sliderNum = document.getElementById('sliderValue');
+const clearBtn = document.getElementById('clear');
+const eraseBtn = document.getElementById('erase');
+const blackBtn = document.getElementById('black');
+const randomBtn = document.getElementById('random');
+const colorPicker = document.getElementById('colorPicker');
+const prevBtn = document.getElementById('previous');
+
+let currentColor = '#333';
+let previousColor;
+let backColor;
+let pickedColor;
+
+let numOfPixels = slider.value;
+
+//Buttons eventListener 
+clearBtn.addEventListener('click', clear);
+eraseBtn.addEventListener('click', erase);
+randomBtn.addEventListener('click', random);
+blackBtn.addEventListener('click', toBlack);
+// prevBtn.addEventListener('click', backToPrevious);
 
 
-//Buttons
-clearButton.addEventListener('click', clearBoard)
-eraseButton.addEventListener('click', eraseFuncButton)
-blackButton.addEventListener('click', blackFuncButton)
-randomButton.addEventListener('click', randomFuncButton)
-
-//Display the default slider value
-output.innerHTML = `${slider.value} x ${slider.value}`
-//Update the current slider value
-slider.oninput = function() {
-    reset()
-    output.innerHTML = `${this.value} x ${this.value}`;
-    numOfSquares = slider.value;
-    gridSize(numOfSquares)
-}
-
-
-//Grid creating
+//Create grid & setting grid size
 function gridSize(size) {
-    for (i= 0; i < size * size; i++) {
-        const div = document.createElement("div");
-        div.className = "square";
-        grid.appendChild(div)
+    for (let i = 0; i < size *size; i++){
+        const div = document.createElement('div');
+        div.className = 'pixel';
+        grid.appendChild(div);
     }
-    squares = document.querySelectorAll(".square");
-    squareMouseOverColor();
+    pixels = document.querySelectorAll('.pixel');
+    mouseOverPixel();
     grid.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+};
+
+//Color each pixel
+function mouseOverPixel() {
+    pixels.forEach(pixel => {
+        pixel.addEventListener('mouseover', () => {
+            pixel.style.backgroundColor = currentColor;
+        });
+    });
+};
+
+//Size slider
+sliderNum.textContent = `${slider.value} x ${slider.value}`;
+
+//Refresh slider value
+slider.oninput = function() {
+    reset();
+    sliderNum.textContent = `${this.value} x ${this.value}`;
+    numOfPixels = slider.value;
+    gridSize(numOfPixels);
+};
+
+gridSize(numOfPixels);
+
+
+//Color picked from rgb table
+// colorPicker.oninput = (tint) => newCurrentColor(tint.target.value);
+
+// function newCurrentColor(newColor) {
+//     backColor = pickedColor
+//     pickedColor = newColor;
+//     previousColor = currentColor;
+//     currentColor = pickedColor;
+// };
+
+function random() {
+    previousColor = currentColor;
+    currentColor = `hsl(${Math.random() * 360}, 90%, 70%)`;
+    eraseBtn.classList.remove('isActive');
 }
-gridSize(numOfSquares)
 
+// function backToPrevious() {
+//     backColor = currentColor;
+//     currentColor = previousColor;
+//     previousColor = backColor;
+// }
 
-//Mouseover effect
-function squareMouseOverColor() {
-    squares.forEach(square => {
-        square.addEventListener("mouseover", () => {
-            square.style.backgroundColor = currentColor;
-        })
-    })
+function toBlack() {
+    if(currentColor != '#333') {
+        previousColor = currentColor;
+        currentColor = '#333';
+        eraseBtn.classList.remove('isActive');
+    } else {
+        currentColor = previousColor;
+    };
 }
 
+function erase() {
+    if (currentColor != '#ededed') {
+        previousColor = currentColor;
+        currentColor = '#ededed';
+        console.log(previousColor);
+        eraseBtn.classList.add('isActive');
+    } else {
+        currentColor = previousColor;
+        eraseBtn.classList.remove('isActive'); 
+    };
+};
 
-//colorPicker for colorButton
-colorPicker.oninput = (tint) => newCurrentColor(tint.target.value)
+function clear() {
+    reset();
+    gridSize(numOfPixels);
+    eraseBtn.classList.remove('isActive');
+};
 
-//Setting color from colorPicker to currentColor
-function newCurrentColor(newColor) {
-    colorPicked = newColor;
-    currentColor = colorPicked;  
-}
-
-//clearBoard function for the clearButton
-function clearBoard() {
-    reset()
-    gridSize(numOfSquares)
-}
-
-//reset function
 function reset() {
-    while (grid.firstChild){
+    while (grid.firstChild) {
         grid.removeChild(grid.lastChild);
     }
-}
-
-//setting currentColor as #ededed for the eraseButton
-function eraseFuncButton() {
-    if(currentColor !== '#ededed'){
-      currentColor = '#ededed';
-      eraseButton.classList.add("isActive")
-      
-    }else {
-      currentColor = colorPicked;
-      eraseButton.classList.remove("isActive")
-      
-    }
-}
-
-//setting currentColor as #333333 for the blackButton
-function blackFuncButton() {
-    if(currentColor !== '#333333'){
-        currentColor = '#333333'
-    }
-}
-
-//setting currentColor as colorPicked from the colorPicker input
-function colorFuncButton(){
-    if(currentColor === '#ededed' || currentColor === '#333333'){
-        currentColor = colorPicked;
-    }
-    
-}
-
-function randomFuncButton() {
-  currentColor = `hsl(${Math.random() * 360}, 90%, 70%)` 
 }
